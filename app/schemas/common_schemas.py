@@ -4,6 +4,7 @@ from enum import Enum
 class UserLevel(str, Enum):
     """Уровень пользователя в системе"""
 
+    admin = "admin"
     free = "free"
     friend = "friend"
 

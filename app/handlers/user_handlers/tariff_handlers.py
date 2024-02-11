@@ -4,7 +4,7 @@ from aiogram import types, Router, F, Bot
 from aiogram.enums import ParseMode
 from aiogram.types import CallbackQuery
 
-from app.config import buttons as btn
+from app.config import buttons as btn, common_messages
 from app.database.cruds import get_tariff, add_user_tariff
 from app.handlers.user_handlers.common_handlers import tariff_cmd
 from app.handlers.user_handlers.utils.callbacks import (
@@ -16,7 +16,6 @@ from app.keyboards.common_inline import (
     create_payment_inline_kb,
     create_invite_inline_kb,
 )
-from app.messages import common_messages
 from app.schemas.common_schemas import SUCCESS_ORDER_STATUSES
 
 tariffs_router = Router(name=__name__)
@@ -36,7 +35,6 @@ async def tariff_payment_callback(
     callback_data: PaymentCallback,
 ):
     """Обработчик кнопки выбора тарифа"""
-    await query.message.delete()
     tariff = await get_tariff(tariff_id=int(callback_data.payment))
     await query.message.answer(
         text=common_messages.PAYMENT_MESSAGE.format(

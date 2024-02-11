@@ -3,8 +3,9 @@ from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart, Command
 from aiogram.types import FSInputFile
 
+from app.database.cruds import add_new_user, user_active_subscriptions
 from app.keyboards.common_inline import create_tariffs_inline_kb
-from app.messages import common_messages as com_msg
+from app.config import common_messages as com_msg
 from app.keyboards import common_keyboards as ckb
 
 user_common_router = Router(name=__name__)
@@ -13,6 +14,7 @@ user_common_router = Router(name=__name__)
 @user_common_router.message(CommandStart())
 async def start_cmd(message: types.Message):
     """Обработчик команды 'старт'"""
+    await add_new_user(message)
     await message.answer_photo(
         photo=FSInputFile(path="./files/welcome.png"),
         caption=com_msg.WELCOME_MESSAGE,
@@ -45,4 +47,7 @@ async def tariff_cmd(message: types.Message):
 @user_common_router.message(Command("mysub"))
 async def my_subscription_cmd(message: types.Message):
     """Обработчик команды 'мои подписки'"""
-    await message.answer("Скоро тут будут отображаться ваши подписки")
+    await message.answer(
+        await user_active_subscriptions(message.from_user.id),
+        parse_mode=ParseMode.MARKDOWN_V2,
+    )

@@ -20,10 +20,9 @@ class Users(CreatedDateMixin, Base):
     """Таблица с пользователями"""
 
     user_id = Column(BigInteger, primary_key=True)
-    nickname = Column(String, default=None)
+    username = Column(String, default=None)
     first_name = Column(String, default=None)
     last_name = Column(String, default=None)
-    phone_number = Column(String, default=None)
     level = Column(String, nullable=False, default=UserLevel.free.value)
     status = Column(String, nullable=False, default=UserStatus.inactive.value)
 
@@ -49,6 +48,7 @@ class UserTariff(Base):
         server_default=func.now(),
         primary_key=True,
     )
+    finish_date = Column(DateTime, nullable=False)
 
 
 class Orders(CreatedDateMixin, Base):
